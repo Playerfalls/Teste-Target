@@ -1,5 +1,5 @@
-import json
 from collections import defaultdict
+
 
 DADOS = {
     "vendas": [
@@ -27,8 +27,9 @@ DADOS = {
 
 
 def calcular_comissao(valor: float) -> float:
+    """Calcula a comissão de uma venda conforme sua faixa de valor."""
     if valor < 100:
-        return 0
+        return 0.0
 
     if valor < 500:
         return valor * 0.01
@@ -36,16 +37,22 @@ def calcular_comissao(valor: float) -> float:
     return valor * 0.05
 
 
-def processar_vendas():
-    resumo = defaultdict(lambda: {"total_vendido": 0, "comissao": 0})
+def processar_vendas(vendas: list[dict]) -> dict:
+    """Agrupa as vendas por vendedor e calcula os respectivos totais."""
+    resumo = defaultdict(lambda: {"total_vendido": 0.0, "comissao": 0.0})
 
-    for venda in DADOS["vendas"]:
+    for venda in vendas:
         vendedor = venda["vendedor"]
         valor = venda["valor"]
 
         resumo[vendedor]["total_vendido"] += valor
         resumo[vendedor]["comissao"] += calcular_comissao(valor)
 
+    return dict(resumo)
+
+
+def exibir_relatorio(resumo: dict) -> None:
+    """Exibe o relatório de comissões no terminal."""
     print("\nRELATÓRIO DE COMISSÕES\n")
 
     for vendedor, dados in resumo.items():
@@ -55,5 +62,11 @@ def processar_vendas():
         print("-" * 40)
 
 
+def main() -> None:
+    """Executa o processamento completo das vendas."""
+    resumo = processar_vendas(DADOS["vendas"])
+    exibir_relatorio(resumo)
+
+
 if __name__ == "__main__":
-    processar_vendas()
+    main()

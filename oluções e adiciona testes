@@ -1,0 +1,399 @@
+[1mdiff --git a/READE.md b/READE.md[m
+[1mdeleted file mode 100644[m
+[1mindex 0861c6c..0000000[m
+[1m--- a/READE.md[m
+[1m+++ /dev/null[m
+[36m@@ -1,99 +0,0 @@[m
+[31m-# Desafio Técnico - Target Sistemas[m
+[31m-[m
+[31m-## Objetivo[m
+[31m-[m
+[31m-Implementar as soluções propostas no desafio utilizando Python, contemplando:[m
+[31m-[m
+[31m-1. Cálculo de comissão de vendedores.[m
+[31m-2. Controle de movimentação de estoque.[m
+[31m-3. Cálculo de juros por atraso.[m
+[31m-[m
+[31m----[m
+[31m-[m
+[31m-## Tecnologias Utilizadas[m
+[31m-[m
+[31m-* Python 3.10+[m
+[31m-* Biblioteca padrão do Python[m
+[31m-[m
+[31m-Não foram utilizadas dependências externas.[m
+[31m-[m
+[31m----[m
+[31m-[m
+[31m-## Estrutura do Projeto[m
+[31m-[m
+[31m-```text[m
+[31m-desafio-target-sistemas/[m
+[31m-│[m
+[31m-├── questao1_comissao.py[m
+[31m-├── questao2_estoque.py[m
+[31m-├── questao3_juros.py[m
+[31m-├── requirements.txt[m
+[31m-└── README.md[m
+[31m-```[m
+[31m-[m
+[31m----[m
+[31m-[m
+[31m-## Como Executar[m
+[31m-[m
+[31m-Clone o repositório:[m
+[31m-[m
+[31m-```bash[m
+[31m-git clone <url-do-repositorio>[m
+[31m-```[m
+[31m-[m
+[31m-Acesse a pasta:[m
+[31m-[m
+[31m-```bash[m
+[31m-cd desafio-target-sistemas[m
+[31m-```[m
+[31m-[m
+[31m-Execute qualquer uma das questões:[m
+[31m-[m
+[31m-```bash[m
+[31m-python questao1_comissao.py[m
+[31m-```[m
+[31m-[m
+[31m-```bash[m
+[31m-python questao2_estoque.py[m
+[31m-```[m
+[31m-[m
+[31m-```bash[m
+[31m-python questao3_juros.py[m
+[31m-```[m
+[31m-[m
+[31m----[m
+[31m-[m
+[31m-## Questão 1[m
+[31m-[m
+[31m-Realiza a leitura dos registros de vendas e calcula a comissão dos vendedores conforme as regras fornecidas no desafio.[m
+[31m-[m
+[31m----[m
+[31m-[m
+[31m-## Questão 2[m
+[31m-[m
+[31m-Permite registrar movimentações de estoque com:[m
+[31m-[m
+[31m-* Identificador único[m
+[31m-* Tipo da movimentação[m
+[31m-* Descrição[m
+[31m-* Quantidade movimentada[m
+[31m-[m
+[31m-Ao final, exibe a quantidade atualizada do produto.[m
+[31m-[m
+[31m----[m
+[31m-[m
+[31m-## Questão 3[m
+[31m-[m
+[31m-Calcula automaticamente:[m
+[31m-[m
+[31m-* Dias em atraso[m
+[31m-* Valor dos juros[m
+[31m-* Valor final atualizado[m
+[31m-[m
+[31m-Considerando multa diária de 2,5%.[m
+[31m-[m
+[31m----[m
+[31m-[m
+[31m-## Autor[m
+[31m-[m
+[31m-João Marcos de Oliveira[m
+[1mdiff --git a/src/questao1_comissao.py b/src/questao1_comissao.py[m
+[1mindex aa03cbe..416e226 100644[m
+[1m--- a/src/questao1_comissao.py[m
+[1m+++ b/src/questao1_comissao.py[m
+[36m@@ -1,6 +1,6 @@[m
+[31m-import json[m
+ from collections import defaultdict[m
+ [m
+[32m+[m
+ DADOS = {[m
+     "vendas": [[m
+         {"vendedor": "João Silva", "valor": 1200.50},[m
+[36m@@ -27,8 +27,9 @@[m [mDADOS = {[m
+ [m
+ [m
+ def calcular_comissao(valor: float) -> float:[m
+[32m+[m[32m    """Calcula a comissão de uma venda conforme sua faixa de valor."""[m
+     if valor < 100:[m
+[31m-        return 0[m
+[32m+[m[32m        return 0.0[m
+ [m
+     if valor < 500:[m
+         return valor * 0.01[m
+[36m@@ -36,16 +37,22 @@[m [mdef calcular_comissao(valor: float) -> float:[m
+     return valor * 0.05[m
+ [m
+ [m
+[31m-def processar_vendas():[m
+[31m-    resumo = defaultdict(lambda: {"total_vendido": 0, "comissao": 0})[m
+[32m+[m[32mdef processar_vendas(vendas: list[dict]) -> dict:[m
+[32m+[m[32m    """Agrupa as vendas por vendedor e calcula os respectivos totais."""[m
+[32m+[m[32m    resumo = defaultdict(lambda: {"total_vendido": 0.0, "comissao": 0.0})[m
+ [m
+[31m-    for venda in DADOS["vendas"]:[m
+[32m+[m[32m    for venda in vendas:[m
+         vendedor = venda["vendedor"][m
+         valor = venda["valor"][m
+ [m
+         resumo[vendedor]["total_vendido"] += valor[m
+         resumo[vendedor]["comissao"] += calcular_comissao(valor)[m
+ [m
+[32m+[m[32m    return dict(resumo)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mdef exibir_relatorio(resumo: dict) -> None:[m
+[32m+[m[32m    """Exibe o relatório de comissões no terminal."""[m
+     print("\nRELATÓRIO DE COMISSÕES\n")[m
+ [m
+     for vendedor, dados in resumo.items():[m
+[36m@@ -55,5 +62,11 @@[m [mdef processar_vendas():[m
+         print("-" * 40)[m
+ [m
+ [m
+[32m+[m[32mdef main() -> None:[m
+[32m+[m[32m    """Executa o processamento completo das vendas."""[m
+[32m+[m[32m    resumo = processar_vendas(DADOS["vendas"])[m
+[32m+[m[32m    exibir_relatorio(resumo)[m
+[32m+[m
+[32m+[m
+ if __name__ == "__main__":[m
+[31m-    processar_vendas()[m
+\ No newline at end of file[m
+[32m+[m[32m    main()[m
+\ No newline at end of file[m
+[1mdiff --git a/src/questao2_estoque.py b/src/questao2_estoque.py[m
+[1mindex b55da77..88d39e1 100644[m
+[1m--- a/src/questao2_estoque.py[m
+[1m+++ b/src/questao2_estoque.py[m
+[36m@@ -1,8 +1,73 @@[m
+ from itertools import count[m
+ [m
+[31m-contador_movimentacao = count(1)[m
+ [m
+[31m-estoque = {[m
+[32m+[m[32mclass Estoque:[m
+[32m+[m[32m    """Controla produtos, movimentações e histórico do estoque."""[m
+[32m+[m
+[32m+[m[32m    def __init__(self, produtos: dict):[m
+[32m+[m[32m        self._produtos = produtos[m
+[32m+[m[32m        self._historico = [][m
+[32m+[m[32m        self._contador_movimentacao = count(1)[m
+[32m+[m
+[32m+[m[32m    def movimentar([m
+[32m+[m[32m        self,[m
+[32m+[m[32m        codigo_produto: int,[m
+[32m+[m[32m        tipo: str,[m
+[32m+[m[32m        quantidade: int,[m
+[32m+[m[32m        descricao_movimentacao: str,[m
+[32m+[m[32m    ) -> dict:[m
+[32m+[m[32m        """Registra uma entrada ou saída no estoque."""[m
+[32m+[m
+[32m+[m[32m        if codigo_produto not in self._produtos:[m
+[32m+[m[32m            raise ValueError("Produto não encontrado.")[m
+[32m+[m
+[32m+[m[32m        if quantidade <= 0:[m
+[32m+[m[32m            raise ValueError("A quantidade deve ser maior que zero.")[m
+[32m+[m
+[32m+[m[32m        tipo = tipo.lower()[m
+[32m+[m
+[32m+[m[32m        if tipo not in ("entrada", "saida"):[m
+[32m+[m[32m            raise ValueError("Tipo deve ser 'entrada' ou 'saida'.")[m
+[32m+[m
+[32m+[m[32m        produto = self._produtos[codigo_produto][m
+[32m+[m
+[32m+[m[32m        if tipo == "saida":[m
+[32m+[m[32m            if quantidade > produto["quantidade"]:[m
+[32m+[m[32m                raise ValueError("Estoque insuficiente.")[m
+[32m+[m
+[32m+[m[32m            produto["quantidade"] -= quantidade[m
+[32m+[m[32m        else:[m
+[32m+[m[32m            produto["quantidade"] += quantidade[m
+[32m+[m
+[32m+[m[32m        movimentacao = {[m
+[32m+[m[32m            "id": next(self._contador_movimentacao),[m
+[32m+[m[32m            "codigo_produto": codigo_produto,[m
+[32m+[m[32m            "produto": produto["descricao"],[m
+[32m+[m[32m            "tipo": tipo,[m
+[32m+[m[32m            "quantidade": quantidade,[m
+[32m+[m[32m            "descricao": descricao_movimentacao,[m
+[32m+[m[32m            "estoque_final": produto["quantidade"],[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        self._historico.append(movimentacao)[m
+[32m+[m
+[32m+[m[32m        return movimentacao[m
+[32m+[m
+[32m+[m[32m    def consultar_estoque(self, codigo_produto: int) -> dict:[m
+[32m+[m[32m        """Retorna os dados de um produto sem permitir alteração direta."""[m
+[32m+[m
+[32m+[m[32m        if codigo_produto not in self._produtos:[m
+[32m+[m[32m            raise ValueError("Produto não encontrado.")[m
+[32m+[m
+[32m+[m[32m        return self._produtos[codigo_produto].copy()[m
+[32m+[m
+[32m+[m[32m    def consultar_historico(self) -> list[dict]:[m
+[32m+[m[32m        """Retorna uma cópia do histórico de movimentações."""[m
+[32m+[m
+[32m+[m[32m        return [movimentacao.copy() for movimentacao in self._historico][m
+[32m+[m
+[32m+[m
+[32m+[m[32mESTOQUE_INICIAL = {[m
+     101: {"descricao": "Caneta Azul", "quantidade": 150},[m
+     102: {"descricao": "Caderno Universitário", "quantidade": 75},[m
+     103: {"descricao": "Borracha Branca", "quantidade": 200},[m
+[36m@@ -11,43 +76,32 @@[m [mestoque = {[m
+ }[m
+ [m
+ [m
+[31m-def movimentar_estoque([m
+[31m-    codigo_produto: int,[m
+[31m-    tipo: str,[m
+[31m-    quantidade: int,[m
+[31m-    descricao_movimentacao: str,[m
+[31m-):[m
+[31m-    if codigo_produto not in estoque:[m
+[31m-        raise ValueError("Produto não encontrado.")[m
+[31m-[m
+[31m-    produto = estoque[codigo_produto][m
+[32m+[m[32mdef exibir_movimentacao(movimentacao: dict) -> None:[m
+[32m+[m[32m    """Exibe os dados de uma movimentação."""[m
+ [m
+[31m-    if tipo.lower() == "entrada":[m
+[31m-        produto["quantidade"] += quantidade[m
+[32m+[m[32m    print("\nMOVIMENTAÇÃO REGISTRADA")[m
+[32m+[m[32m    print(f"ID: {movimentacao['id']}")[m
+[32m+[m[32m    print(f"Produto: {movimentacao['produto']}")[m
+[32m+[m[32m    print(f"Tipo: {movimentacao['tipo']}")[m
+[32m+[m[32m    print(f"Quantidade: {movimentacao['quantidade']}")[m
+[32m+[m[32m    print(f"Descrição: {movimentacao['descricao']}")[m
+[32m+[m[32m    print(f"Estoque final: {movimentacao['estoque_final']}")[m
+ [m
+[31m-    elif tipo.lower() == "saida":[m
+[31m-        if quantidade > produto["quantidade"]:[m
+[31m-            raise ValueError("Estoque insuficiente.")[m
+ [m
+[31m-        produto["quantidade"] -= quantidade[m
+[32m+[m[32mdef main() -> None:[m
+[32m+[m[32m    """Executa um exemplo de movimentação."""[m
+ [m
+[31m-    else:[m
+[31m-        raise ValueError("Tipo deve ser 'entrada' ou 'saida'.")[m
+[32m+[m[32m    estoque = Estoque(ESTOQUE_INICIAL.copy())[m
+ [m
+[31m-    identificador = next(contador_movimentacao)[m
+[32m+[m[32m    movimentacao = estoque.movimentar([m
+[32m+[m[32m        codigo_produto=101,[m
+[32m+[m[32m        tipo="saida",[m
+[32m+[m[32m        quantidade=10,[m
+[32m+[m[32m        descricao_movimentacao="Venda para cliente",[m
+[32m+[m[32m    )[m
+ [m
+[31m-    print("\nMOVIMENTAÇÃO REGISTRADA")[m
+[31m-    print(f"ID: {identificador}")[m
+[31m-    print(f"Produto: {produto['descricao']}")[m
+[31m-    print(f"Tipo: {tipo}")[m
+[31m-    print(f"Descrição: {descricao_movimentacao}")[m
+[31m-    print(f"Estoque final: {produto['quantidade']}")[m
+[32m+[m[32m    exibir_movimentacao(movimentacao)[m
+ [m
+ [m
+ if __name__ == "__main__":[m
+[31m-    movimentar_estoque([m
+[31m-        codigo_produto=101,[m
+[31m-        tipo="saida",[m
+[31m-        quantidade=10,[m
+[31m-        descricao_movimentacao="Venda para cliente"[m
+[31m-    )[m
+\ No newline at end of file[m
+[32m+[m[32m    main()[m
+\ No newline at end of file[m
+[1mdiff --git a/src/questao3_juros.py b/src/questao3_juros.py[m
+[1mindex e4f6158..4960c9d 100644[m
+[1m--- a/src/questao3_juros.py[m
+[1m+++ b/src/questao3_juros.py[m
+[36m@@ -1,24 +1,33 @@[m
+[31m-from datetime import datetime[m
+[32m+[m[32mfrom datetime import date, datetime[m
+ [m
+ [m
+[31m-def calcular_juros(valor: float, data_vencimento: str):[m
+[31m-    hoje = datetime.now().date()[m
+[32m+[m[32mTAXA_JUROS_DIARIA = 0.025[m
+[32m+[m
+[32m+[m
+[32m+[m[32mdef calcular_juros([m
+[32m+[m[32m    valor: float,[m
+[32m+[m[32m    data_vencimento: str,[m
+[32m+[m[32m    data_referencia: date | None = None,[m
+[32m+[m[32m) -> dict:[m
+[32m+[m[32m    """Calcula os juros de uma dívida em atraso."""[m
+[32m+[m
+[32m+[m[32m    if valor < 0:[m
+[32m+[m[32m        raise ValueError("O valor não pode ser negativo.")[m
+ [m
+     vencimento = datetime.strptime([m
+         data_vencimento,[m
+[31m-        "%d/%m/%Y"[m
+[32m+[m[32m        "%d/%m/%Y",[m
+     ).date()[m
+ [m
+[31m-    dias_atraso = (hoje - vencimento).days[m
+[32m+[m[32m    if data_referencia is None:[m
+[32m+[m[32m        data_referencia = date.today()[m
+ [m
+[31m-    if dias_atraso <= 0:[m
+[31m-        return {[m
+[31m-            "dias_atraso": 0,[m
+[31m-            "juros": 0,[m
+[31m-            "valor_final": valor,[m
+[31m-        }[m
+[32m+[m[32m    dias_atraso = max([m
+[32m+[m[32m        0,[m
+[32m+[m[32m        (data_referencia - vencimento).days,[m
+[32m+[m[32m    )[m
+ [m
+[31m-    juros = valor * 0.025 * dias_atraso[m
+[32m+[m[32m    juros = valor * TAXA_JUROS_DIARIA * dias_atraso[m
+     valor_final = valor + juros[m
+ [m
+     return {[m
+[36m@@ -28,13 +37,25 @@[m [mdef calcular_juros(valor: float, data_vencimento: str):[m
+     }[m
+ [m
+ [m
+[31m-if __name__ == "__main__":[m
+[31m-    resultado = calcular_juros([m
+[31m-        valor=1000,[m
+[31m-        data_vencimento="20/09/2026"[m
+[31m-    )[m
+[32m+[m[32mdef exibir_resultado(resultado: dict) -> None:[m
+[32m+[m[32m    """Exibe o resultado do cálculo no terminal."""[m
+ [m
+     print("\nCÁLCULO DE JUROS\n")[m
+     print(f"Dias de atraso: {resultado['dias_atraso']}")[m
+     print(f"Juros: R$ {resultado['juros']:.2f}")[m
+[31m-    print(f"Valor final: R$ {resultado['valor_final']:.2f}")[m
+\ No newline at end of file[m
+[32m+[m[32m    print(f"Valor final: R$ {resultado['valor_final']:.2f}")[m
+[32m+[m
+[32m+[m
+[32m+[m[32mdef main() -> None:[m
+[32m+[m[32m    """Executa um exemplo de cálculo de juros."""[m
+[32m+[m
+[32m+[m[32m    resultado = calcular_juros([m
+[32m+[m[32m        valor=1000,[m
+[32m+[m[32m        data_vencimento="20/09/2026",[m
+[32m+[m[32m    )[m
+[32m+[m
+[32m+[m[32m    exibir_resultado(resultado)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mif __name__ == "__main__":[m
+[32m+[m[32m    main()[m
+\ No newline at end of file[m
